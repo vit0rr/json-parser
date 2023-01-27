@@ -3,13 +3,13 @@ import { TOKEN_TYPES } from './enums/tokenTypes.js';
 export const parser = (tokens: Array<{ type: string; value?: any }>) => {
     let current = 0;
 
-    let walk = () => {
+    const walk = () => {
         let token = tokens[current];
 
         if (token.type === TOKEN_TYPES.LEFT_BRACE) {
             token = tokens[++current];
 
-            let node: {
+            const node: {
                 type: string;
                 properties?: Array<{ type: string; key: any; value: any }>;
             } = {
@@ -18,7 +18,7 @@ export const parser = (tokens: Array<{ type: string; value?: any }>) => {
             };
 
             while (token.type !== TOKEN_TYPES.RIGHT_BRACE) {
-                let property: { type: string; key: any; value: any } = {
+                const property: { type: string; key: any; value: any } = {
                     type: 'Property',
                     key: token,
                     value: null,
@@ -51,7 +51,7 @@ export const parser = (tokens: Array<{ type: string; value?: any }>) => {
         if (token.type === TOKEN_TYPES.LEFT_BRACKET) {
             token = tokens[++current];
 
-            let node: {
+            const node: {
                 type: string;
                 elements?: Array<{ type?: string; value?: any }>;
             } = {
@@ -115,7 +115,7 @@ export const parser = (tokens: Array<{ type: string; value?: any }>) => {
         throw new TypeError(token.type);
     };
 
-    let ast = {
+    const ast = {
         type: 'Program',
         body: [],
     };
