@@ -36,7 +36,7 @@
     "prettier": "prettier --config .prettierrc --write .",
     "test:watch": "jest --watch"
   },
-  "author": "Jakub Synowiec <jsynowiec@users.noreply.github.com>",
+  "author": "Vitor <vi.souza.almeida@protonmail.com>",
   "license": "MIT",
   "dependencies": {
     "tslib": "~2.4"
