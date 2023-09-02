@@ -18,13 +18,16 @@ export const lexer = (input: string): Token[] => {
         return /[0-9]/.test(c);
     }
 
+    function isDoubleQuotes(c: string) {
+        return c === '"';
+    }
+
     function scanForward(pred: (x: string) => boolean) {
         while (current < input.length && pred(input.charAt(current))) current++;
     }
 
     while (current < input.length) {
-        let char = input[current];
-
+        const char = input[current];
         scanForward(isEmptyStrings);
 
         if (isNumber(char)) {
@@ -32,6 +35,16 @@ export const lexer = (input: string): Token[] => {
             scanForward(isNumber);
             const value = input.slice(start, current);
             tokens.push(createToken(TOKEN_TYPES.NUMBER, value));
+            continue;
+        }
+
+        if (isDoubleQuotes(char)) {
+            current++;
+            const start = current;
+            scanForward((c) => !isDoubleQuotes(c));
+            const value = input.slice(start, current);
+            current++;
+            tokens.push(createToken(TOKEN_TYPES.STRING, value));
             continue;
         }
 
@@ -68,22 +81,6 @@ export const lexer = (input: string): Token[] => {
         if (char === ',') {
             tokens.push(createToken(TOKEN_TYPES.COMMA));
             current++;
-            continue;
-        }
-
-        if (char === '"') {
-            let value = '';
-
-            char = input[++current];
-
-            while (char !== '"') {
-                value += char;
-                char = input[++current];
-            }
-
-            char = input[++current];
-
-            tokens.push(createToken(TOKEN_TYPES.STRING, value));
             continue;
         }
 
