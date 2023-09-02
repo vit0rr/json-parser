@@ -1,6 +1,6 @@
-import { createToken } from "./createToken.js";
-import { TOKEN_TYPES } from "./enums/tokenTypes.js";
-import { Token } from "./interface/token.js";
+import { createToken } from './createToken.js';
+import { TOKEN_TYPES } from './enums/tokenTypes.js';
+import { Token } from './interface/token.js';
 
 export const lexer = (input: string): Token[] => {
     let current = 0;

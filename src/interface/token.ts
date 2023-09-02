@@ -1,4 +1,4 @@
-import { TOKEN_TYPES } from "../enums/tokenTypes.js";
+import { TOKEN_TYPES } from '../enums/tokenTypes.js';
 
 export interface Token {
     type: TOKEN_TYPES;
