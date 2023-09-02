@@ -18,6 +18,10 @@ export const lexer = (input: string): Token[] => {
         return /[0-9]/.test(c);
     }
 
+    function isAlpha(c: string) {
+        return /[_a-zA-Z]/.test(c);
+    }
+
     function isDoubleQuotes(c: string) {
         return c === '"';
     }
@@ -46,6 +50,26 @@ export const lexer = (input: string): Token[] => {
             current++;
             tokens.push(createToken(TOKEN_TYPES.STRING, value));
             continue;
+        }
+
+        if (isAlpha(char)) {
+            const start = current;
+            scanForward(isAlpha);
+            const value = input.slice(start, current);
+
+            switch (value) {
+                case 'true':
+                    tokens.push(createToken(TOKEN_TYPES.TRUE));
+                    continue;
+                case 'false':
+                    tokens.push(createToken(TOKEN_TYPES.FALSE));
+                    continue;
+                case 'null':
+                    tokens.push(createToken(TOKEN_TYPES.NULL));
+                    continue;
+            }
+
+            current++;
         }
 
         if (char === '{') {
@@ -81,40 +105,6 @@ export const lexer = (input: string): Token[] => {
         if (char === ',') {
             tokens.push(createToken(TOKEN_TYPES.COMMA));
             current++;
-            continue;
-        }
-
-        if (
-            char === 't' &&
-            input[current + 1] === 'r' &&
-            input[current + 2] === 'u' &&
-            input[current + 3] === 'e'
-        ) {
-            tokens.push(createToken(TOKEN_TYPES.TRUE));
-            current += 4;
-            continue;
-        }
-
-        if (
-            char === 'f' &&
-            input[current + 1] === 'a' &&
-            input[current + 2] === 'l' &&
-            input[current + 3] === 's' &&
-            input[current + 4] === 'e'
-        ) {
-            tokens.push(createToken(TOKEN_TYPES.FALSE));
-            current += 5;
-            continue;
-        }
-
-        if (
-            char === 'n' &&
-            input[current + 1] === 'u' &&
-            input[current + 2] === 'l' &&
-            input[current + 3] === 'l'
-        ) {
-            tokens.push(createToken(TOKEN_TYPES.NULL));
-            current += 4;
             continue;
         }
 
