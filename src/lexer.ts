@@ -5,11 +5,35 @@ import { Token } from './interface/token.js';
 export const lexer = (input: string): Token[] => {
     let current = 0;
     const tokens: Token[] = [];
-    const WHITESPACE = /\s/;
-    const NUMBERS = /[0-9]/;
+
+    function isEmptyStrings(c: string) {
+        // scan forward all
+        // \t - tabs
+        // \b - empty strings at the beginning and end of a word
+        // \n - newline char
+        return /[ \t\b\n]/.test(c);
+    }
+
+    function isNumber(c: string) {
+        return /[0-9]/.test(c);
+    }
+
+    function scanForward(pred: (x: string) => boolean) {
+        while (current < input.length && pred(input.charAt(current))) current++;
+    }
 
     while (current < input.length) {
         let char = input[current];
+
+        scanForward(isEmptyStrings);
+
+        if (isNumber(char)) {
+            const start = current;
+            scanForward(isNumber);
+            const value = input.slice(start, current);
+            tokens.push(createToken(TOKEN_TYPES.NUMBER, value));
+            continue;
+        }
 
         if (char === '{') {
             tokens.push(createToken(TOKEN_TYPES.LEFT_BRACE));
@@ -44,23 +68,6 @@ export const lexer = (input: string): Token[] => {
         if (char === ',') {
             tokens.push(createToken(TOKEN_TYPES.COMMA));
             current++;
-            continue;
-        }
-
-        if (WHITESPACE.test(char)) {
-            current++;
-            continue;
-        }
-
-        if (NUMBERS.test(char)) {
-            let value = '';
-
-            while (NUMBERS.test(char)) {
-                value += char;
-                char = input[++current];
-            }
-
-            tokens.push(createToken(TOKEN_TYPES.NUMBER, value));
             continue;
         }
 
