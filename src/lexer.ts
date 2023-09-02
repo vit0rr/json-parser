@@ -5,6 +5,8 @@ import { Token } from './interface/token.js';
 export const lexer = (input: string): Token[] => {
     let current = 0;
     const tokens: Token[] = [];
+    const WHITESPACE = /\s/;
+    const NUMBERS = /[0-9]/;
 
     while (current < input.length) {
         let char = input[current];
@@ -45,13 +47,11 @@ export const lexer = (input: string): Token[] => {
             continue;
         }
 
-        const WHITESPACE = /\s/;
         if (WHITESPACE.test(char)) {
             current++;
             continue;
         }
 
-        const NUMBERS = /[0-9]/;
         if (NUMBERS.test(char)) {
             let value = '';
 
