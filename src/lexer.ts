@@ -30,6 +30,46 @@ export const lexer = (input: string): Token[] => {
         while (current < input.length && pred(input.charAt(current))) current++;
     }
 
+    function handleSpecialChars(char: string) {
+        if (char === '{') {
+            tokens.push(createToken(TOKEN_TYPES.LEFT_BRACE));
+            current++;
+            return true;
+        }
+
+        if (char === '}') {
+            tokens.push(createToken(TOKEN_TYPES.RIGHT_BRACE));
+            current++;
+            return true;
+        }
+
+        if (char === '[') {
+            tokens.push(createToken(TOKEN_TYPES.LEFT_BRACKET));
+            current++;
+            return true;
+        }
+
+        if (char === ']') {
+            tokens.push(createToken(TOKEN_TYPES.RIGHT_BRACKET));
+            current++;
+            return true;
+        }
+
+        if (char === ':') {
+            tokens.push(createToken(TOKEN_TYPES.COLON));
+            current++;
+            return true;
+        }
+
+        if (char === ',') {
+            tokens.push(createToken(TOKEN_TYPES.COMMA));
+            current++;
+            return true;
+        }
+
+        return false;
+    }
+
     while (current < input.length) {
         const char = input[current];
         scanForward(isEmptyStrings);
@@ -72,39 +112,7 @@ export const lexer = (input: string): Token[] => {
             current++;
         }
 
-        if (char === '{') {
-            tokens.push(createToken(TOKEN_TYPES.LEFT_BRACE));
-            current++;
-            continue;
-        }
-
-        if (char === '}') {
-            tokens.push(createToken(TOKEN_TYPES.RIGHT_BRACE));
-            current++;
-            continue;
-        }
-
-        if (char === '[') {
-            tokens.push(createToken(TOKEN_TYPES.LEFT_BRACKET));
-            current++;
-            continue;
-        }
-
-        if (char === ']') {
-            tokens.push(createToken(TOKEN_TYPES.RIGHT_BRACKET));
-            current++;
-            continue;
-        }
-
-        if (char === ':') {
-            tokens.push(createToken(TOKEN_TYPES.COLON));
-            current++;
-            continue;
-        }
-
-        if (char === ',') {
-            tokens.push(createToken(TOKEN_TYPES.COMMA));
-            current++;
+        if (handleSpecialChars(char)) {
             continue;
         }
 
